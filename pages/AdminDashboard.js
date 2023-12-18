@@ -56,7 +56,7 @@ export const AdminDashboard = () => {
             <TextInput
                 style={registerStyles.input}
                 placeholder="Password"
-                secureTextEntry={true}
+                // secureTextEntry={true}
                 onChangeText={(text) => handleChange('password', text)}
                 value={formData.password}
             />
