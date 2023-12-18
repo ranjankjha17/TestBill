@@ -98,11 +98,11 @@ export const Home = (props) => {
 
                 if (success) {
                     dispatch(addBill(formData))
-                    setFormData({
-                        farmername: '',
-                        bags: '',
-                        agrnumber: ''
-                    });
+                    // setFormData({
+                    //     farmername: '',
+                    //     bags: '',
+                    //     agrnumber: ''
+                    // });
                     alert("Your form data is saved")
                 }
             } catch (error) {
@@ -147,6 +147,11 @@ export const Home = (props) => {
             await AsyncStorage.removeItem('bill');
             dispatch(resetBill())
             dispatch(resetStudents())
+            setFormData({
+                farmername: '',
+                bags: '',
+                agrnumber: ''
+            });
             alert("Create a New Bill")
             navigation.navigate('Home');
         } catch (error) {

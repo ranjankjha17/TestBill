@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View, ScrollView, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +17,7 @@ export const PartyForm = (props) => {
   const dispatch = useDispatch()
   const uuidValue = uuid.v4();
   const rowId = parseInt(uuidValue.substring(0, 4), 16);
+  const quantityInputRef = useRef(null);
 
   const [partyformData, setpartyFormData] = useState({
     partyname: '',
@@ -61,11 +62,13 @@ export const PartyForm = (props) => {
       partyformData['rowid'] = rowId
       partyformData['agrnumber'] = bill[0] ? bill[0].agrnumber : ''
       partyformData['serialnumber'] = bill[0] ? bill[0].serialnumber : ''
-     dispatch(addStudent(partyformData));
-      // setpartyFormData({
-      //   quantity: '',
+      dispatch(addStudent(partyformData));
+      setpartyFormData(prevData => ({
+        ...prevData,
+        quantity: ''
+      }));
+      quantityInputRef.current.focus();
 
-      // })
       alert('your data is sent to list')
     } else {
       alert("Please fill all the field")
@@ -89,6 +92,7 @@ export const PartyForm = (props) => {
           setpartyFormData({
             partyname: '',
             rate: '',
+            quantity: ''
           });
           alert("Your form data is saved")
         }
@@ -134,8 +138,8 @@ export const PartyForm = (props) => {
     const totalQuantityLength = organizedData.reduce((total, entry) => {
       return total + entry.quantity.length;
     }, 0);
-    const remainingQuantity = totalBags-totalQuantityLength
-     // Get current date and time
+    const remainingQuantity = totalBags - totalQuantityLength
+    // Get current date and time
     const currentDate = new Date();
     const formattedDate = `${currentDate.getDate().toString().padStart(2, '0')}/${(currentDate.getMonth() + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()}`;
     const formattedTime = `${currentDate.getHours().toString().padStart(2, '0')}:${currentDate.getMinutes().toString().padStart(2, '0')}:${currentDate.getSeconds().toString().padStart(2, '0')}`;
@@ -168,7 +172,7 @@ export const PartyForm = (props) => {
       <p style="margin-right: 1px;">Quantity:</p>
       ${entry.quantity.map((qty, index) => (
         `<p style="margin-left: 22px;">${qty}</p>${(index + 1) % 4 === 0 ? '<br />' : ''}`
-        
+
       )).join('')}
     </div>
           <div style="display: flex; justify-content: space-between;"><p>Total :</p> <p>${entry.totalquantity}</p></div>
@@ -192,7 +196,7 @@ export const PartyForm = (props) => {
         const printBillData = await getPrintBill(bill[0]?.agrnumber)
         const htmlContent = generateHTMLContent(printBillData);
         await Print.printAsync({ html: htmlContent });
-      }else{
+      } else {
         alert("Please, Input AGRNumber")
       }
 
@@ -219,6 +223,7 @@ export const PartyForm = (props) => {
         />
         <TextInput
           style={PartyFormStyles.input}
+          ref={quantityInputRef}
           placeholder="Quantity"
           onChangeText={(text) => handleChange('quantity', text)}
           value={partyformData.quantity}

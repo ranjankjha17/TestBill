@@ -9,8 +9,8 @@ export const Login = () => {
     const dispatch = useDispatch()
     const navigation = useNavigation();
     const [formData, setFormData] = useState({
-        username: 'spyder',
-        password: 'spyder',
+        username: 'abc',
+        password: '123',
     });
     const handleChange = (field, value) => {
         setFormData({
@@ -21,7 +21,10 @@ export const Login = () => {
     const handleSubmit = async () => {
         if (formData.username && formData.password) {
             try {
-                const response = await axios.post('https://skybillserver.vercel.app/login', formData);
+                const headers = {
+                    Accept: 'application/json',
+                };    
+                const response = await axios.post('https://skybillserver.vercel.app/login', formData, { headers });
                 const { data } = response;
                 const { success, message, token, username } = data;
                 if (success) {

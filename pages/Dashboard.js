@@ -14,14 +14,16 @@ export const Dashboard = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const username = useSelector(state => state.auth.username)
+
   useEffect(() => {
   }, [username])
   const handlelogout = async () => {
     try {
-      await AsyncStorage.removeItem('auth');
-      dispatch(logout())
+      await AsyncStorage.removeItem('bill')
       dispatch(resetBill())
       dispatch(resetStudents())
+      await AsyncStorage.removeItem('auth');
+      dispatch(logout())
       navigation.navigate('Login');
     } catch (error) {
       console.error('Error handling new bill:', error);
