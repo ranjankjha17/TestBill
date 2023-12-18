@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { Dimensions,StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons'; // Make sure to install @expo/vector-icons
 
 export const AdminDashboard = () => {
     // const screenHeight = Dimensions.get('window').height;
@@ -15,7 +16,13 @@ export const AdminDashboard = () => {
             [field]: value,
         });
     };
-
+    const toggleShowPassword = () => {
+        setFormData({
+          ...formData,
+          showPassword: !formData.showPassword,
+        });
+      };
+    
     const handleSubmit = async () => {
         if (formData.username && formData.password) {
             try {
@@ -40,7 +47,7 @@ export const AdminDashboard = () => {
                 alert(" UserName and Password did not save")
             }
         } else {
-            alert("Please fill UserName and Password")
+            alert("Please Fill UserName and Password")
         }
     }
     return (
@@ -53,13 +60,27 @@ export const AdminDashboard = () => {
                 onChangeText={(text) => handleChange('username', text)}
                 value={formData.username}
             />
-            <TextInput
+            {/* <TextInput
                 style={registerStyles.input}
                 placeholder="Password"
                 secureTextEntry={true}
                 onChangeText={(text) => handleChange('password', text)}
                 value={formData.password}
-            />
+            /> */}
+
+            <View style={registerStyles.passwordContainer}>
+                <TextInput
+                    style={registerStyles.passwordInput}
+                    placeholder="Password"
+                    secureTextEntry={!formData.showPassword} // Toggle secureTextEntry based on showPassword state
+                    onChangeText={(text) => handleChange('password', text)}
+                    value={formData.password}
+                />
+                <TouchableOpacity onPress={toggleShowPassword} style={registerStyles.showPasswordIcon}>
+                    <FontAwesome name={formData.showPassword ? 'eye-slash' : 'eye'} size={20} color="#000" />
+                </TouchableOpacity>
+            </View>
+
             <View style={registerStyles.buttonContainer}>
                 <TouchableOpacity style={registerStyles.button} onPress={handleSubmit}>
                     <Text style={registerStyles.buttonText}>Save</Text>
@@ -79,7 +100,7 @@ const registerStyles = StyleSheet.create({
         paddingRight: 16,
         paddingTop: 1,
         paddingBottom: 1,
-        height:500,
+        height: 500,
     },
     heading: {
         fontSize: 18,
@@ -116,5 +137,27 @@ const registerStyles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: "500"
     },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    passwordInput: {
+        height: 40,
+        borderColor: 'gray',
+        backgroundColor: '#D5F5E3',
+        borderWidth: 2,
+        marginBottom: 10,
+        paddingLeft: 10,
+        width: '80%', // Adjust the width as needed
+        fontWeight: '500',
+        borderRadius: 5,
+    },
+    showPasswordIcon: {
+        width: '20%', // Adjust the width as needed
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
 });
 
