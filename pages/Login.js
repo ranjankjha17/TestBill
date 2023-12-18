@@ -45,7 +45,7 @@ export const Login = () => {
                 alert("Invalid UserName and Password")
             }
         } else {
-            alert("Please fill UserName and Password")
+            alert("Please Fill UserName and Password")
         }
     }
     return (
