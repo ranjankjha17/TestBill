@@ -14,7 +14,7 @@ export const PartyFormList = () => {
         dispatch(loadStudents(JSON.parse(studentsData)));
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error.response.data.message)
     }
   }
   useEffect(() => {

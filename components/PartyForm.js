@@ -40,7 +40,7 @@ export const PartyForm = (props) => {
         dispatch(loadBill(JSON.parse(billData)));
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error.response.data.message)
     }
   }
 
@@ -97,15 +97,9 @@ export const PartyForm = (props) => {
           alert("Your form data is saved")
         }
       } catch (error) {
-        if (axios.isCancel(error)) {
-          console.log('Request canceled:', error.message);
-        } else {
-          console.error('Error submitting form1:', error);
-          console.error('Full error object:', error);
-
-          console.error('Error response data:', error.response?.data);
-          console.error('Error status:', error.response?.status);
-        }
+        console.log(error.response.data.message)
+        alert("Try again later")
+  
       }
     } else {
       alert("Your Party Quantity Details is Empty")

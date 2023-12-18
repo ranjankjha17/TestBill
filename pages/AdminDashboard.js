@@ -1,13 +1,10 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { Alert, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
-import { login } from '../reducers/login';
+import { Dimensions,StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 
-export const Login = () => {
-    const dispatch = useDispatch()
-    const navigation = useNavigation();
+export const AdminDashboard = () => {
+    // const screenHeight = Dimensions.get('window').height;
+
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -18,71 +15,79 @@ export const Login = () => {
             [field]: value,
         });
     };
+
     const handleSubmit = async () => {
         if (formData.username && formData.password) {
             try {
                 const headers = {
                     Accept: 'application/json',
-                };    
-                const response = await axios.post('https://skybillserver.vercel.app/login', formData, { headers });
+                };
+                const response = await axios.post('https://skybillserver.vercel.app/register', formData, { headers });
                 const { data } = response;
-                const { success, message, token, username } = data;
+                const { success } = data;
                 if (success) {
-                    dispatch(login(username))
                     setFormData({
                         username: '',
                         password: '',
                     });
-
-                    navigation.navigate('Home');
-                    //alert('Success', 'You are logged in successfully');
+                    alert('User Registered');
 
                 } else {
-                    alert('Error', message || 'Login failed');
+                    alert('Error', message || 'Registration failed');
                 }
             } catch (error) {
                 console.log(error.response.data.message)
-                alert("Invalid UserName and Password")
+                alert(" UserName and Password did not save")
             }
         } else {
             alert("Please fill UserName and Password")
         }
     }
     return (
-        <ScrollView contentContainerStyle={LoginStyles.container}>
+        // <ScrollView contentContainerStyle={[registerStyles.container,{height:screenHeight}]}>
+        <ScrollView contentContainerStyle={registerStyles.container}>
+            <Text style={registerStyles.heading}>Create New User</Text>
             <TextInput
-                style={LoginStyles.input}
+                style={registerStyles.input}
                 placeholder="UserName"
                 onChangeText={(text) => handleChange('username', text)}
                 value={formData.username}
             />
             <TextInput
-                style={LoginStyles.input}
+                style={registerStyles.input}
                 placeholder="Password"
                 secureTextEntry={true}
                 onChangeText={(text) => handleChange('password', text)}
                 value={formData.password}
             />
-            <View style={LoginStyles.buttonContainer}>
-                <TouchableOpacity style={LoginStyles.button} onPress={handleSubmit}>
-                    <Text style={LoginStyles.buttonText}>Login</Text>
+            <View style={registerStyles.buttonContainer}>
+                <TouchableOpacity style={registerStyles.button} onPress={handleSubmit}>
+                    <Text style={registerStyles.buttonText}>Save</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
     )
 }
 
-const LoginStyles = StyleSheet.create({
+const registerStyles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        backgroundColor: '#17202A',
+        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         paddingLeft: 16,
         paddingRight: 16,
         paddingTop: 1,
         paddingBottom: 1,
+        height:500,
     },
+    heading: {
+        fontSize: 18,
+        marginBottom: 20,
+        color: '#000',
+        fontWeight: '700',
+    },
+
     input: {
         height: 40,
         borderColor: 'gray',
@@ -112,5 +117,4 @@ const LoginStyles = StyleSheet.create({
         fontWeight: "500"
     },
 });
-
 

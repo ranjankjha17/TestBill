@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
-import { PartyForm } from '../components/PartyForm';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { addBill, loadBill, resetBill } from '../reducers/bill';
@@ -10,15 +9,9 @@ import { resetStudents } from '../reducers/temp_order';
 
 export const Home = (props) => {
     const { username } = props
-    // console.log(username)
     const navigation = useNavigation();
     const dispatch = useDispatch()
     const bill = useSelector(state => state.bill.bill);
-    // console.log(bill)
-    // const username = useSelector(state => state.auth.username)
-    // const memoizedusername = useMemo(() => username, [username]);
-    // console.log('auth', memoizedusername)
-
     async function loadStoredBill() {
         try {
             const billData = await AsyncStorage.getItem('bill');
@@ -26,13 +19,9 @@ export const Home = (props) => {
                 dispatch(loadBill(JSON.parse(billData)));
             }
         } catch (error) {
-            console.log(error.message);
+            console.log(error.response.data.message);
         }
     }
-    //   useEffect(() => {   
-    //     loadStoredBill();
-    //   }, []);
-
     const getCurrentDate = () => {
         const currentDate = new Date();
         const day = currentDate.getDate();
@@ -55,16 +44,14 @@ export const Home = (props) => {
     const getSerialNumber = async () => {
         try {
             const { data } = await axios.get('https://skybillserver.vercel.app/get-serialnumber')
-            // console.log(data.data)
             const serialnumber = await data.data
             setFormData((prevData) => ({
                 ...prevData,
                 serialnumber,
             }));
         } catch (error) {
-            console.error('Error fetching serial number:', error);
+            console.log(error.response.data.message)
         }
-
     }
 
     const [formData, setFormData] = useState({
@@ -87,9 +74,6 @@ export const Home = (props) => {
             const headers = {
                 Accept: 'application/json',
             };
-
-            // console.log(formData)
-
             try {
                 const response = await axios.post('https://skybillserver.vercel.app/create-bill', formData, { headers }
                 );
@@ -106,20 +90,9 @@ export const Home = (props) => {
                     alert("Your form data is saved")
                 }
             } catch (error) {
-                if (axios.isCancel(error)) {
-                    console.log('Request canceled:', error.message);
-                } else {
-                    console.error('Error submitting form1:', error);
-                    console.error('Full error object:', error);
-
-                    console.error('Error response data:', error.response?.data);
-                    console.error('Error status:', error.response?.status);
-
-                }
-
+                console.log(error.response.data.message)
+                alert("Try again later")
             }
-
-
         } else {
             alert("Please fill all the field")
         }
@@ -155,10 +128,10 @@ export const Home = (props) => {
             alert("Create a New Bill")
             navigation.navigate('Home');
         } catch (error) {
-            console.error('Error handling new bill:', error);
+            console.log(error.response.data.message)
+            alert("Try Again")
         }
     };
-
     return (
         <View>
             <ScrollView contentContainerStyle={HomeStyles.container}>

@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { resetBill } from '../reducers/bill';
 import { resetStudents } from '../reducers/temp_order';
+import { AdminDashboard } from './AdminDashboard';
 
 export const Dashboard = () => {
   const navigation = useNavigation();
@@ -26,8 +27,9 @@ export const Dashboard = () => {
       dispatch(logout())
       navigation.navigate('Login');
     } catch (error) {
-      console.error('Error handling new bill:', error);
-    }
+      console.log(error.response.data.message)
+     // alert("Try again later")
+}
   };
   return (
     <ScrollView style={{ backgroundColor: "#fff" }}>
@@ -35,17 +37,28 @@ export const Dashboard = () => {
         <TouchableOpacity style={DashboardStyles.button} onPress={handlelogout}>
           <Text style={DashboardStyles.buttonText}>Logout</Text>
         </TouchableOpacity>
-        {/* <Pressable style={DashboardStyles.button} onPress={handlelogout}>
-          <Text style={DashboardStyles.buttonText}>Logout</Text>
-        </Pressable> */}
       </View>
-      <Home username={username} />
-      <PartyForm username={username} />
-      <PartyFormList />
+      {
+        username === 'admin'
+          ?
+            <AdminDashboard />
+          :
+          <>
+            <Home username={username} />
+            <PartyForm username={username} />
+            <PartyFormList />
+          </>
+      }
     </ScrollView>
   )
 }
 const DashboardStyles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: '#f0f0f0',
+  },
+
   buttonContainer: {
     paddingLeft: 10,
     flexDirection: "row",

@@ -8,7 +8,7 @@ export const getPrintBill = async (agrnumber) => {
     const response = await axios.get(`${BASE_URL}/get-billdetails/${agrnumber}`);
     return response.data.data
   } catch (e) {
-    console.log(e.message)
+    console.log(e.response.data.message)
   }
 }
 
