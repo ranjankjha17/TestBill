@@ -63,6 +63,11 @@ export const PartyForm = (props) => {
       partyformData['rowid'] = rowId
       partyformData['agrnumber'] = bill[0] ? bill[0].agrnumber : ''
       partyformData['serialnumber'] = bill[0] ? bill[0].serialnumber : ''
+      if (!partyformData.agrnumber) {
+        alert('Please input the AGR Number.');
+        return; // Exit the function if AGR number is blank
+      }
+
       dispatch(addStudent(partyformData));
       setpartyFormData(prevData => ({
         ...prevData,
