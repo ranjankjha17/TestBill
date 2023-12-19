@@ -1,10 +1,12 @@
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useState } from 'react'
-import { Dimensions,StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { Logout } from '../components/Logout';
 
 export const AdminDashboard = () => {
     // const screenHeight = Dimensions.get('window').height;
-
+    const navigation = useNavigation();
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -43,29 +45,42 @@ export const AdminDashboard = () => {
             alert("Please Fill UserName and Password")
         }
     }
+    const handleNewBill = () => {
+        navigation.navigate('Main');
+    };
+
     return (
         // <ScrollView contentContainerStyle={[registerStyles.container,{height:screenHeight}]}>
-        <ScrollView contentContainerStyle={registerStyles.container}>
-            <Text style={registerStyles.heading}>Create New User</Text>
-            <TextInput
-                style={registerStyles.input}
-                placeholder="UserName"
-                onChangeText={(text) => handleChange('username', text)}
-                value={formData.username}
-            />
-            <TextInput
-                style={registerStyles.input}
-                placeholder="Password"
-                // secureTextEntry={true}
-                onChangeText={(text) => handleChange('password', text)}
-                value={formData.password}
-            />
-            <View style={registerStyles.buttonContainer}>
-                <TouchableOpacity style={registerStyles.button} onPress={handleSubmit}>
-                    <Text style={registerStyles.buttonText}>Save</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
+        <View>
+            <Logout />
+            <ScrollView contentContainerStyle={registerStyles.container}>
+                <Text style={registerStyles.heading}>Create New User</Text>
+                <TextInput
+                    style={registerStyles.input}
+                    placeholder="UserName"
+                    onChangeText={(text) => handleChange('username', text)}
+                    value={formData.username}
+                />
+                <TextInput
+                    style={registerStyles.input}
+                    placeholder="Password"
+                    // secureTextEntry={true}
+                    onChangeText={(text) => handleChange('password', text)}
+                    value={formData.password}
+                />
+                <View style={registerStyles.buttonContainer}>
+                    <TouchableOpacity style={registerStyles.button} onPress={handleSubmit}>
+                        <Text style={registerStyles.buttonText}>Save</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ ...registerStyles.buttonContainer, marginTop: 10 }}>
+                    <TouchableOpacity style={registerStyles.button} onPress={handleNewBill}>
+                        <Text style={registerStyles.buttonText}>New Bill</Text>
+                    </TouchableOpacity>
+                </View>
+
+            </ScrollView>
+        </View>
     )
 }
 
@@ -79,7 +94,7 @@ const registerStyles = StyleSheet.create({
         paddingRight: 16,
         paddingTop: 1,
         paddingBottom: 1,
-        height:500,
+        height: 500,
     },
     heading: {
         fontSize: 18,
@@ -116,6 +131,6 @@ const registerStyles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: "500"
     },
-    
+
 });
 

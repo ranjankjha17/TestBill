@@ -8,6 +8,7 @@ import { View,Text } from 'react-native';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { Main } from './pages/Main';
 
 const Stack = createStackNavigator();
 
@@ -30,11 +31,13 @@ export default function App() {
           <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Home" component={Dashboard} />
+          <Stack.Screen name="Main" component={Main} />
           <Stack.Screen name="Register" component={AdminDashboard} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
       </ErrorBoundary>
+    // <AdminDashboard/>
   );
 }
 

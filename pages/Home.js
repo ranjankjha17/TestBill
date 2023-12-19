@@ -8,7 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import { resetStudents } from '../reducers/temp_order';
 
 export const Home = (props) => {
-    const { username } = props
+    //const { username } = props
+    const username=useSelector(state=>state.auth.username)
     const navigation = useNavigation();
     const dispatch = useDispatch()
     const bill = useSelector(state => state.bill.bill);
@@ -126,7 +127,7 @@ export const Home = (props) => {
                 agrnumber: ''
             });
             alert("Create a New Bill")
-            navigation.navigate('Home');
+           // navigation.navigate('Home');
         } catch (error) {
             console.log(error.response.data.message)
             alert("Try Again")

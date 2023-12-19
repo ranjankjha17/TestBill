@@ -10,6 +10,8 @@ import { useNavigation } from '@react-navigation/native';
 import { resetBill } from '../reducers/bill';
 import { resetStudents } from '../reducers/temp_order';
 import { AdminDashboard } from './AdminDashboard';
+import { Main } from './Main';
+import { Logout } from '../components/Logout';
 
 export const Dashboard = () => {
   const navigation = useNavigation();
@@ -18,35 +20,15 @@ export const Dashboard = () => {
 
   useEffect(() => {
   }, [username])
-  const handlelogout = async () => {
-    try {
-      await AsyncStorage.removeItem('bill')
-      dispatch(resetBill())
-      dispatch(resetStudents())
-      await AsyncStorage.removeItem('auth');
-      dispatch(logout())
-      navigation.navigate('Login');
-    } catch (error) {
-      console.log(error.response.data.message)
-     // alert("Try again later")
-}
-  };
   return (
     <ScrollView style={{ backgroundColor: "#fff" }}>
-      <View style={DashboardStyles.buttonContainer}>
-        <TouchableOpacity style={DashboardStyles.button} onPress={handlelogout}>
-          <Text style={DashboardStyles.buttonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
       {
         username === 'admin'
           ?
             <AdminDashboard />
           :
           <>
-            <Home username={username} />
-            <PartyForm username={username} />
-            <PartyFormList />
+          <Main/>
           </>
       }
     </ScrollView>

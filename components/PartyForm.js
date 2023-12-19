@@ -11,7 +11,8 @@ import { getPrintBill } from './services/PrintService';
 import * as Print from 'expo-print';
 
 export const PartyForm = (props) => {
-  const { username } = props
+  //const { username } = props
+  const username=useSelector(state=>state.auth.username)
   const bill = useSelector(state => state.bill.bill);
   const students = useSelector(state => state.tempOrder.students);
   const dispatch = useDispatch()
@@ -88,7 +89,7 @@ export const PartyForm = (props) => {
         const { success, message } = data;
         if (success) {
           dispatch(resetStudents())
-          AsyncStorage.removeItem('students');
+         AsyncStorage.removeItem('students');
           setpartyFormData({
             partyname: '',
             rate: '',
