@@ -37,7 +37,6 @@ export default function App() {
         </NavigationContainer>
       </Provider>
       </ErrorBoundary>
-    // <AdminDashboard/>
   );
 }
 

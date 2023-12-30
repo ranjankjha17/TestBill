@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { TouchableOpacity } from 'react-native';
-import { StyleSheet, Text, View, ScrollView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TextInput} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { addStudent, resetStudents } from '../reducers/temp_order';
 import uuid from 'react-native-uuid';
@@ -12,13 +12,17 @@ import * as Print from 'expo-print';
 
 export const PartyForm = (props) => {
   //const { username } = props
-  const username=useSelector(state=>state.auth.username)
+  
+  const username = useSelector(state => state.auth.username)
   const bill = useSelector(state => state.bill.bill);
   const students = useSelector(state => state.tempOrder.students);
   const dispatch = useDispatch()
   const uuidValue = uuid.v4();
   const rowId = parseInt(uuidValue.substring(0, 4), 16);
   const quantityInputRef = useRef(null);
+  const [selectedPrinter, setSelectedPrinter] = useState();
+  const PrinterConnection = NativeModules.PrinterConnection;
+
 
   const [partyformData, setpartyFormData] = useState({
     partyname: '',
@@ -94,7 +98,7 @@ export const PartyForm = (props) => {
         const { success, message } = data;
         if (success) {
           dispatch(resetStudents())
-         AsyncStorage.removeItem('students');
+          AsyncStorage.removeItem('students');
           setpartyFormData({
             partyname: '',
             rate: '',
@@ -105,7 +109,7 @@ export const PartyForm = (props) => {
       } catch (error) {
         console.log(error.response.data.message)
         alert("Try again later")
-  
+
       }
     } else {
       alert("Your Party Quantity Details is Empty")
@@ -146,7 +150,7 @@ export const PartyForm = (props) => {
 
     // Add current date and time in the first line
     htmlContent += `
-    <div style="display: flex; justify-content: space-between;font-size:1px;">
+    <div style="display: flex; justify-content: space-between;font-size:10px;">
       <div style="display: flex; justify-content: space-between;"><p>Date</p> <p>${formattedDate}</p></div>
       <div style="display: flex; justify-content: space-between;"><p>Time</p> <p>${formattedTime}</p></div>
     </div>
@@ -154,18 +158,20 @@ export const PartyForm = (props) => {
 
     // Add agrnumber, farmername, and totalbags
     htmlContent += `
-    <div style="font-size:1px;">
+    <div style="font-size:10px;">
          <div style="display: flex; justify-content: space-between;"><p>AGR Number</p> <p>${data[0].agrnumber}</p></div>
          <div style="display: flex; justify-content: space-between;"><p>Farmer Name</p> <p>${data[0].farmername}</p></div>
          <div style="display: flex; justify-content: space-between;"><p>Total Bags</p> <p>${data[0].totalbags}</p></div>
          <div style="border-bottom: 1px solid black;"></div>
+         <div style="border-bottom: 1px solid black;"></div>
+
     </div>
   `;
 
     // Use forEach instead of map, and append to htmlContent directly
     organizedData.forEach((entry, index) => {
       htmlContent += `
-      <div style="margin-bottom: 2px;font-size:1px;border-bottom: 1px solid black;">
+      <div style="margin-bottom: 2px;font-size:10px;border-bottom: 1px solid black;">
       <div style="display: flex; justify-content: space-between;"><p>Party Name :</p> <p>${entry.partyname}</p></div>
       <div style="display: flex; justify-content: space-between;"><p>Rate :</p> <p>${entry.rate}</p></div>
       <div style="display: flex; flex-wrap: wrap;">
@@ -175,13 +181,13 @@ export const PartyForm = (props) => {
 
       )).join('')}
     </div>
-          <div style="display: flex; justify-content: space-between;"><p>Total :</p> <p>${entry.totalquantity}</p></div>
+          <div style="display: flex; justify-content: space-between;font-size:10px;"><p>Total :</p> <p>${entry.totalquantity}</p></div>
       </div>`;
     });
 
     // Add remaining quantity
     htmlContent += `
-    <div style="font-size:1px;">
+    <div style="font-size:10px;">
     <div style="display: flex; justify-content: space-between;"><p>Total</p> <p>${totalQuantitySum}</p></div>
       <div style="display: flex; justify-content: space-between;"><p>Remaining Quantity</p> <p>${remainingQuantity}</p></div>
     </div>
@@ -190,18 +196,21 @@ export const PartyForm = (props) => {
     return htmlContent;
   };
 
+
   const handlePrint = async () => {
     try {
       if (bill[0]?.agrnumber) {
         const printBillData = await getPrintBill(bill[0]?.agrnumber)
         const htmlContent = generateHTMLContent(printBillData);
-        await Print.printAsync({ html: htmlContent });
+       // console.log('Generated HTML:', htmlContent);
+       await Print.printAsync({ html: htmlContent });
+  
       } else {
         alert("Please, Input AGRNumber")
       }
 
     } catch (error) {
-      console.error('Error printing:', error.messge);
+      console.log('Error printing:', error.response.data.message);
     }
   };
 
@@ -256,13 +265,6 @@ const PartyFormStyles = StyleSheet.create({
     paddingTop: 10,
 
   },
-  // heading: {
-  //   fontSize: 18,
-  //   marginBottom: 20,
-  //   color: '#1C2833',
-  //   fontWeight: '700',
-  // },
-
   input: {
     height: 40,
     borderColor: 'gray',
